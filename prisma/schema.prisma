@@ -9,3 +9,102 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Business {
+  id            Int       @id @default(autoincrement())
+  business_name String
+  description   String
+  address       String
+  city          String
+  state         String
+  zip           String
+  phone         String
+  email         String
+  category      String
+  image         String
+  latitude      Float
+  longitude     Float
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reviews       Review[]
+  Product       Product[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  phone     String
+  address   String
+  city      String
+  state     String
+  zip       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Order     Order[]
+  Cart      Cart[]
+}
+
+model Product {
+  id                  Int          @id @default(autoincrement())
+  product_name        String
+  product_description String       @default("No description")
+  product_price       Float        @default(0)
+  product_image       String       @default("https://via.placeholder.com/150")
+  business_id         Int
+  business            Business     @relation(fields: [business_id], references: [id])
+  rating              Int          @default(0)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  OrderDetail         OrderDetail? @relation(fields: [orderDetailId], references: [id])
+  orderDetailId       Int?
+  Cart                Cart?        @relation(fields: [cartId], references: [id])
+  cartId              Int?
+}
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  review      String
+  rating      Int
+  business_id Int
+  business    Business @relation(fields: [business_id], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id              Int           @id @default(autoincrement())
+  order_date      DateTime      @default(now())
+  user_id         Int
+  user            User          @relation(fields: [user_id], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  isPaid          Boolean       @default(false)
+  paidAt          DateTime?
+  isDelivered     Boolean       @default(false)
+  deliveredAt     DateTime?
+  order_detail_id Int
+  OrderDetail     OrderDetail[]
+}
+
+model OrderDetail {
+  id        Int       @id @default(autoincrement())
+  order_id  Int?
+  order     Order?    @relation(fields: [order_id], references: [id])
+  products  Product[]
+  quantity  Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Cart {
+  id        Int       @id @default(autoincrement())
+  user_id   Int
+  user      User      @relation(fields: [user_id], references: [id])
+  products  Product[]
+  quantity  Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
