@@ -1,0 +1,20 @@
+import {
+  getAllProducts,
+  getProductById,
+} from "../data-access/products.repository";
+
+export const getProducts = async (req, res) => {
+  const products = await getAllProducts(req, res);
+  if (!products) {
+    return res.status(400).json({ error: "No products found" });
+  }
+  res.json(products);
+};
+
+export const getProduct = async (req, res) => {
+  const product = await getProductById(req, res);
+  if (!product) {
+    return res.status(400).json({ error: "Product not found" });
+  }
+  res.json(product);
+};

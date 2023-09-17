@@ -1,6 +1,7 @@
 import express from "express";
 import logger from "./libraries/logger";
 import usersRouter from "./apps/users/api/users.routes";
+import productsRouter from "./apps/products/api/products.routes";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 // use the router from the users app
 app.use("/api/users", usersRouter);
+app.use("/api/products", productsRouter);
 
 // error handling middleware
 
