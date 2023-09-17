@@ -1,19 +1,10 @@
 import express from "express";
-import pino from "pino";
+import logger from "./libraries/logger";
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-const logger = pino({
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-    },
-  },
-});
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use((req, res, next) => {
   logger.info(req.method, req.url);
