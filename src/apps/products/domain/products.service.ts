@@ -2,6 +2,7 @@ import {
   getAllProducts,
   getProductById,
 } from "../data-access/products.repository";
+import logger from "../../../libraries/logger";
 
 export const getProducts = async (req, res) => {
   const products = await getAllProducts(req, res);

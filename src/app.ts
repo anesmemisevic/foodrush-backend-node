@@ -2,6 +2,7 @@ import express from "express";
 import logger from "./libraries/logger";
 import usersRouter from "./apps/users/api/users.routes";
 import productsRouter from "./apps/products/api/products.routes";
+import businessesRouter from "./apps/businesses/api/businesses.routes";
 
 const app = express();
 
@@ -9,8 +10,9 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use((req, res, next) => {
-  //   logger.info(req.method, req.url, req.body, req.params, req.query);
-  logger.info(req.method, req.url);
+  let msg = `${req.method} ${req.url} ${res.statusCode} `;
+  // msg += `${JSON.stringify(req.body)} ${JSON.stringify(req.params)} ${JSON.stringify(req.query)}`;
+  logger.info(msg);
   next();
 });
 
@@ -22,6 +24,7 @@ app.get("/", (req, res) => {
 // use the router from the users app
 app.use("/api/users", usersRouter);
 app.use("/api/products", productsRouter);
+app.use("/api/businesses", businessesRouter);
 
 // error handling middleware
 
