@@ -21,9 +21,9 @@ model Business {
   phone         String
   email         String
   category      String
-  image         String
-  latitude      Float
-  longitude     Float
+  image         String?
+  latitude      Float?
+  longitude     Float?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   reviews       Review[]
