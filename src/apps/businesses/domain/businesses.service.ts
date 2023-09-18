@@ -2,6 +2,7 @@ import logger from "../../../libraries/logger";
 import {
   getAllBusinesses,
   getBusinessById,
+  createOneBusiness,
 } from "../data-access/businesses.repository";
 
 export const getBusinesses = async (req, res) => {
@@ -17,4 +18,13 @@ export const getBusiness = async (req, res) => {
     return res.status(400).json({ error: "Business not found" });
   }
   res.json(businessById);
+};
+
+export const createBusiness = async (req, res, next) => {
+  logger.info("createBusiness() in businesses.service.ts");
+  const business = await createOneBusiness(req, res, next);
+  if (!business) {
+    return res.status(400).json({ error: "Business not created" });
+  }
+  res.json(business);
 };

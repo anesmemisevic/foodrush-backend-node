@@ -28,15 +28,15 @@ app.use("/api/businesses", businessesRouter);
 
 // error handling middleware
 
-app.use((err, req, res, next) => {
-  // only synchronous errors will be caught here
-  if (err.type === "auth") {
-    res.status(401).json({ error: "Unauthorized" });
-  } else if (err.type === "input") {
-    res.status(400).json({ error: "Invalid input" });
-  } else {
-    res.status(500).json({ error: "Oops, server error" });
-  }
-});
+// app.use((err, req, res, next) => {
+//   // only synchronous errors will be caught here
+//   if (err.type === "auth") {
+//     res.status(401).json({ error: "Unauthorized" });
+//   } else if (err.type === "input") {
+//     res.status(400).json({ error: "Invalid input" });
+//   } else {
+//     res.status(500).json({ error: "Oops, server error" });
+//   }
+// });
 
 export default app;

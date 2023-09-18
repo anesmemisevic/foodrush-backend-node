@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Business" ALTER COLUMN "image" DROP NOT NULL,
+ALTER COLUMN "latitude" DROP NOT NULL,
+ALTER COLUMN "longitude" DROP NOT NULL;

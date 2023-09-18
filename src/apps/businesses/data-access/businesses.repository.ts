@@ -20,3 +20,45 @@ export const getBusinessById = async (req, res) => {
     res.status(500).json({ error: "Oops, server error" });
   }
 };
+
+export const createOneBusiness = async (req, res, next) => {
+  logger.info("createBusiness() in businesses.repository.ts");
+  const {
+    business_name,
+    description,
+    address,
+    city,
+    state,
+    zip,
+    phone,
+    email,
+    category,
+    image,
+    latitude,
+    longitude,
+  } = req.body;
+  logger.info("req.body: ", req.body);
+  logger.info(req.body);
+  try {
+    const business = await prisma.business.create({
+      data: {
+        business_name,
+        description,
+        address,
+        city,
+        state,
+        zip,
+        phone,
+        email,
+        category,
+        image,
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+      },
+    });
+    return business;
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Oops, server error from DB" });
+  }
+};
