@@ -1,5 +1,6 @@
 import {
   createOneProduct,
+  editOneProduct,
   getAllProducts,
   getProductById,
 } from "../data-access/products.repository";
@@ -27,4 +28,10 @@ export const createProduct = async (req, res, next) => {
     return res.status(400).json({ error: "Product not created" });
   }
   res.json(product);
+};
+
+export const editProduct = async (req, res, next) => {
+  const editedProduct = await editOneProduct(req, res, next);
+  logger.info(editedProduct);
+  res.status(200).json(editedProduct);
 };

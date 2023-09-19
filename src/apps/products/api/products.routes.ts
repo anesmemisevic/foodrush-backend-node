@@ -3,6 +3,7 @@ import {
   getProducts,
   getProduct,
   createProduct,
+  editProduct,
 } from "../domain/products.service";
 import { Router } from "express";
 
@@ -18,6 +19,10 @@ productsRouter.get("/", getProducts, (req, res) => {
 
 productsRouter.get("/:productId", getProduct, (req, res) => {
   logger.info("getProduct() in products.service.ts");
+});
+
+productsRouter.put("/:productId", editProduct, (req, res) => {
+  logger.info("editProduct() in products.service.ts");
 });
 
 productsRouter.post("/create", createProduct, (req, res, next) => {});

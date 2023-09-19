@@ -26,7 +26,8 @@ export const getProductById = async (req, res) => {
 };
 
 export const createOneProduct = async (req, res, next) => {
-  console.log("req.body: ", req.body);
+  console.log("req.body:");
+  console.log(req.body);
 
   try {
     const product = await prisma.product.create({
@@ -40,6 +41,59 @@ export const createOneProduct = async (req, res, next) => {
     return product;
   } catch (err) {
     console.log(err);
+    console.log("this is error");
     res.status(500).json({ error: "Oops, server error" });
+  }
+};
+
+export const editOneProduct = async (req, res, next) => {
+  try {
+    // first check if product exists
+
+    const productExists = await prisma.product.findUnique({
+      where: {
+        id: Number(req.params.productId),
+        business_id: Number(req.body.business_id),
+      },
+    });
+
+    if (!productExists) {
+      return res.status(400).json({
+        error:
+          "Product does not exist or is not associated with the specified business",
+      });
+    }
+
+    // if product exists, update it
+
+    try {
+      // take from body or leave the same
+      const product_name = req.body.product_name || productExists.product_name;
+      const product_description =
+        req.body.product_description || productExists.product_description;
+      const product_price =
+        req.body.product_price || productExists.product_price;
+      const business_id = req.body.business_id || productExists.business_id;
+
+      const product = await prisma.product.update({
+        where: {
+          id: Number(req.params.productId),
+        },
+        data: {
+          product_name: product_name,
+          product_description: product_description,
+          product_price: Number(product_price),
+          business_id: Number(business_id),
+        },
+      });
+      logger.debug(product);
+      return product;
+    } catch (err) {
+      logger.info(err);
+      res.status(500).json({ error: "Invalid payload from updating product" });
+    }
+  } catch (err) {
+    logger.info(err);
+    return res.status(500).json({ error: "Oops, server error" });
   }
 };
