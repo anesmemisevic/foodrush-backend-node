@@ -62,6 +62,7 @@ model Product {
   orderDetailId       Int?
   Cart                Cart?        @relation(fields: [cartId], references: [id])
   cartId              Int?
+  CartItem            CartItem[]
 }
 
 model Review {
@@ -75,36 +76,46 @@ model Review {
 }
 
 model Order {
-  id              Int           @id @default(autoincrement())
-  order_date      DateTime      @default(now())
+  id              Int          @id @default(autoincrement())
+  order_date      DateTime     @default(now())
   user_id         Int
-  user            User          @relation(fields: [user_id], references: [id])
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  isPaid          Boolean       @default(false)
+  user            User         @relation(fields: [user_id], references: [id])
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  isPaid          Boolean      @default(false)
   paidAt          DateTime?
-  isDelivered     Boolean       @default(false)
+  isDelivered     Boolean      @default(false)
   deliveredAt     DateTime?
-  order_detail_id Int
-  OrderDetail     OrderDetail[]
+  order_detail    OrderDetail? @relation(fields: [order_detail_id], references: [id])
+  order_detail_id Int?
 }
 
 model OrderDetail {
   id        Int       @id @default(autoincrement())
-  order_id  Int?
-  order     Order?    @relation(fields: [order_id], references: [id])
   products  Product[]
-  quantity  Int
+  price     Float
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  Order     Order[]
 }
 
 model Cart {
-  id        Int       @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   user_id   Int
-  user      User      @relation(fields: [user_id], references: [id])
+  user      User       @relation(fields: [user_id], references: [id])
   products  Product[]
-  quantity  Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  CartItem  CartItem[]
+}
+
+model CartItem {
+  id         Int      @id @default(autoincrement())
+  cart_id    Int
+  cart       Cart     @relation(fields: [cart_id], references: [id])
+  product_id Int
+  product    Product  @relation(fields: [product_id], references: [id])
+  quantity   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
