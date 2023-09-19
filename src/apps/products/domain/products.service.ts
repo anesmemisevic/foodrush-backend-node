@@ -1,5 +1,6 @@
 import {
   createOneProduct,
+  deleteOneProduct,
   editOneProduct,
   getAllProducts,
   getProductById,
@@ -27,11 +28,16 @@ export const createProduct = async (req, res, next) => {
   if (!product) {
     return res.status(400).json({ error: "Product not created" });
   }
-  res.json(product);
+  res.status(201).json(product);
 };
 
 export const editProduct = async (req, res, next) => {
   const editedProduct = await editOneProduct(req, res, next);
   logger.info(editedProduct);
   res.status(200).json(editedProduct);
+};
+
+export const deleteProduct = async (req, res, next) => {
+  const deletedProduct = await deleteOneProduct(req, res, next);
+  res.status(204).send();
 };

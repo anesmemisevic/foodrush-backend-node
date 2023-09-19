@@ -42,7 +42,7 @@ export const createOneProduct = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     console.log("this is error");
-    res.status(500).json({ error: "Oops, server error" });
+    return res.status(500).json({ error: "Oops, server error" });
   }
 };
 
@@ -91,6 +91,43 @@ export const editOneProduct = async (req, res, next) => {
     } catch (err) {
       logger.info(err);
       res.status(500).json({ error: "Invalid payload from updating product" });
+    }
+  } catch (err) {
+    logger.info(err);
+    return res.status(500).json({ error: "Oops, server error" });
+  }
+};
+
+export const deleteOneProduct = async (req, res, next) => {
+  try {
+    // first check if product exists
+
+    const productExists = await prisma.product.findUnique({
+      where: {
+        id: Number(req.params.productId),
+      },
+    });
+
+    if (!productExists) {
+      return res.status(400).json({
+        error:
+          "Product does not exist or is not associated with the specified business",
+      });
+    }
+
+    // if product exists, delete it
+
+    try {
+      const product = await prisma.product.delete({
+        where: {
+          id: Number(req.params.productId),
+        },
+      });
+      // logger.debug(product);
+      return product;
+    } catch (err) {
+      logger.info(err);
+      res.status(500).json({ error: "Could not delete product" });
     }
   } catch (err) {
     logger.info(err);

@@ -4,6 +4,7 @@ import {
   getProduct,
   createProduct,
   editProduct,
+  deleteProduct,
 } from "../domain/products.service";
 import { Router } from "express";
 
@@ -27,4 +28,7 @@ productsRouter.put("/:productId", editProduct, (req, res) => {
 
 productsRouter.post("/create", createProduct, (req, res, next) => {});
 
+productsRouter.delete("/:productId", deleteProduct, (req, res) => {
+  logger.info("deleteProduct() in products.service.ts");
+});
 export default productsRouter;
