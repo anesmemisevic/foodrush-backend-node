@@ -28,48 +28,46 @@ export const getAllOrders = async (req, res) => {
 
 export const createOneOrder = async (req, res) => {
   try {
-    // first get products from req.body
-    // const products = req.body.products;
-    // const productsId = products.map((product) => product.id);
-    const productsIds = req.body.products.map((product) => product.id);
-
-    // then create order details
-    const orderDetail = await prisma.orderDetail.create({
-      data: {
-        products: {
-          connect: req.body.products,
+    const order = await prisma.$transaction(async (prisma) => {
+      // create order details
+      const orderDetail = await prisma.orderDetail.create({
+        data: {
+          products: {
+            connect: req.body.products,
+          },
+          price: Number(req.body.price),
         },
-        price: Number(req.body.price),
-      },
-    });
+      });
 
-    // then create order
-
-    const order = await prisma.order.create({
-      data: {
-        user: {
-          connect: {
-            id: Number(req.body.userId),
+      // then create order according to order details
+      const order = await prisma.order.create({
+        data: {
+          user: {
+            connect: {
+              id: Number(req.body.userId),
+            },
+          },
+          order_detail: {
+            connect: {
+              id: orderDetail.id,
+            },
           },
         },
-        order_detail: {
-          connect: {
+      });
+
+      // then return order
+      logger.info("print products from order - order details");
+      const products_from_order_detail = await prisma.orderDetail
+        .findUnique({
+          where: {
             id: orderDetail.id,
           },
-        },
-      },
+        })
+        .products();
+      logger.info(products_from_order_detail);
+      return order;
     });
 
-    // then return order
-    logger.info("print products from order - order details");
-    const products_from_order_detail = await prisma.orderDetail
-      .findUnique({
-        where: {
-          id: orderDetail.id,
-        },
-      })
-      .products();
-    logger.info(products_from_order_detail);
     return order;
   } catch (err) {
     logger.info(err);
