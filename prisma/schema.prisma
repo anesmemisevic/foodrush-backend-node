@@ -78,8 +78,8 @@ model Review {
 model Order {
   id              Int          @id @default(autoincrement())
   order_date      DateTime     @default(now())
-  user_id         Int
-  user            User         @relation(fields: [user_id], references: [id])
+  user_id         Int?
+  user            User?        @relation(fields: [user_id], references: [id])
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
   isPaid          Boolean      @default(false)
