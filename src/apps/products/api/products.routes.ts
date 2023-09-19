@@ -1,5 +1,9 @@
 import logger from "../../../libraries/logger";
-import { getProducts, getProduct } from "../domain/products.service";
+import {
+  getProducts,
+  getProduct,
+  createProduct,
+} from "../domain/products.service";
 import { Router } from "express";
 
 /**
@@ -15,4 +19,7 @@ productsRouter.get("/", getProducts, (req, res) => {
 productsRouter.get("/:productId", getProduct, (req, res) => {
   logger.info("getProduct() in products.service.ts");
 });
+
+productsRouter.post("/create", createProduct, (req, res, next) => {});
+
 export default productsRouter;

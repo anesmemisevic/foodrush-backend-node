@@ -52,10 +52,10 @@ model Product {
   product_name        String
   product_description String       @default("No description")
   product_price       Float        @default(0)
-  product_image       String       @default("https://via.placeholder.com/150")
+  product_image       String?      @default("https://via.placeholder.com/150")
   business_id         Int
   business            Business     @relation(fields: [business_id], references: [id])
-  rating              Int          @default(0)
+  rating              Int?         @default(0)
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
   OrderDetail         OrderDetail? @relation(fields: [orderDetailId], references: [id])
