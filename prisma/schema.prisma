@@ -61,7 +61,8 @@ model Product {
   OrderDetail        OrderDetail? @relation(fields: [orderDetailId], references: [id])
   orderDetailId      Int?
   cartId             Int?
-  CartItem           CartItem[]
+  Cart               Cart?        @relation(fields: [cartId], references: [id])
+  quantity           Int?         @default(0)
 }
 
 model Review {
@@ -99,22 +100,11 @@ model OrderDetail {
 }
 
 model Cart {
-  id        Int        @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   userId    Int
-  user      User       @relation(fields: [userId], references: [id])
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  CartItem  CartItem[]
-  price     Float      @default(0)
-}
-
-model CartItem {
-  id        Int      @id @default(autoincrement())
-  cartId    Int
-  cart      Cart     @relation(fields: [cartId], references: [id])
-  productId Int
-  product   Product  @relation(fields: [productId], references: [id])
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  price     Float     @default(0)
 }
