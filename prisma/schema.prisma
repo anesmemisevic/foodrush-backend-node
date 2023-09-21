@@ -11,23 +11,23 @@ datasource db {
 }
 
 model Business {
-  id            Int       @id @default(autoincrement())
-  business_name String
-  description   String
-  address       String
-  city          String
-  state         String
-  zip           String
-  phone         String
-  email         String
-  category      String
-  image         String?
-  latitude      Float?
-  longitude     Float?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  reviews       Review[]
-  Product       Product[]
+  id           Int       @id @default(autoincrement())
+  businessName String
+  description  String
+  address      String
+  city         String
+  state        String
+  zip          String
+  phone        String
+  email        String
+  category     String
+  image        String?
+  latitude     Float?
+  longitude    Float?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  reviews      Review[]
+  Product      Product[]
 }
 
 model User {
@@ -48,45 +48,45 @@ model User {
 }
 
 model Product {
-  id                  Int          @id @default(autoincrement())
-  product_name        String
-  product_description String       @default("No description")
-  product_price       Float        @default(0)
-  product_image       String?      @default("https://via.placeholder.com/150")
-  business_id         Int
-  business            Business     @relation(fields: [business_id], references: [id])
-  rating              Int?         @default(0)
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
-  OrderDetail         OrderDetail? @relation(fields: [orderDetailId], references: [id])
-  orderDetailId       Int?
-  cartId              Int?
-  CartItem            CartItem[]
+  id                 Int          @id @default(autoincrement())
+  productName        String
+  productDescription String       @default("No description")
+  productPrice       Float        @default(0)
+  productImage       String?      @default("https://via.placeholder.com/150")
+  businessId         Int
+  business           Business     @relation(fields: [businessId], references: [id])
+  rating             Int?         @default(0)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  OrderDetail        OrderDetail? @relation(fields: [orderDetailId], references: [id])
+  orderDetailId      Int?
+  cartId             Int?
+  CartItem           CartItem[]
 }
 
 model Review {
-  id          Int      @id @default(autoincrement())
-  review      String
-  rating      Int
-  business_id Int
-  business    Business @relation(fields: [business_id], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  review     String
+  rating     Int
+  businessId Int
+  business   Business @relation(fields: [businessId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Order {
-  id              Int          @id @default(autoincrement())
-  order_date      DateTime     @default(now())
-  user_id         Int?
-  user            User?        @relation(fields: [user_id], references: [id])
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  isPaid          Boolean      @default(false)
-  paidAt          DateTime?
-  isDelivered     Boolean      @default(false)
-  deliveredAt     DateTime?
-  order_detail    OrderDetail? @relation(fields: [order_detail_id], references: [id])
-  order_detail_id Int?
+  id            Int          @id @default(autoincrement())
+  orderDate     DateTime     @default(now())
+  userId        Int?
+  user          User?        @relation(fields: [userId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  isPaid        Boolean      @default(false)
+  paidAt        DateTime?
+  isDelivered   Boolean      @default(false)
+  deliveredAt   DateTime?
+  orderDetail   OrderDetail? @relation(fields: [orderDetailId], references: [id])
+  orderDetailId Int?
 }
 
 model OrderDetail {
@@ -100,20 +100,21 @@ model OrderDetail {
 
 model Cart {
   id        Int        @id @default(autoincrement())
-  user_id   Int
-  user      User       @relation(fields: [user_id], references: [id])
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   CartItem  CartItem[]
+  price     Float      @default(0)
 }
 
 model CartItem {
-  id         Int      @id @default(autoincrement())
-  cart_id    Int
-  cart       Cart     @relation(fields: [cart_id], references: [id])
-  product_id Int
-  product    Product  @relation(fields: [product_id], references: [id])
-  quantity   Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  cartId    Int
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
