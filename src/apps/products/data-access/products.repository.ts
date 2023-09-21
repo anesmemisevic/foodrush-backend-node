@@ -33,8 +33,8 @@ export const createOneProduct = async (req, res, next) => {
     const product = await prisma.product.create({
       data: {
         product_name: req.body.product_name,
-        product_description: req.body.product_description,
-        product_price: Number(req.body.product_price),
+        productDescription: req.body.product_description,
+        productPrice: Number(req.body.product_price),
         business_id: Number(req.body.business_id),
       },
     });
@@ -70,9 +70,9 @@ export const editOneProduct = async (req, res, next) => {
       // take from body or leave the same
       const product_name = req.body.product_name || productExists.product_name;
       const product_description =
-        req.body.product_description || productExists.product_description;
+        req.body.product_description || productExists.productDescription;
       const product_price =
-        req.body.product_price || productExists.product_price;
+        req.body.product_price || productExists.productPrice;
       const business_id = req.body.business_id || productExists.business_id;
 
       const product = await prisma.product.update({
@@ -81,8 +81,8 @@ export const editOneProduct = async (req, res, next) => {
         },
         data: {
           product_name: product_name,
-          product_description: product_description,
-          product_price: Number(product_price),
+          productDescription: product_description,
+          productPrice: Number(product_price),
           business_id: Number(business_id),
         },
       });

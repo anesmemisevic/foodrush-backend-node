@@ -11,23 +11,23 @@ datasource db {
 }
 
 model Business {
-  id           Int       @id @default(autoincrement())
-  businessName String
-  description  String
-  address      String
-  city         String
-  state        String
-  zip          String
-  phone        String
-  email        String
-  category     String
-  image        String?
-  latitude     Float?
-  longitude    Float?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  reviews      Review[]
-  Product      Product[]
+  id            Int       @id @default(autoincrement())
+  business_name String
+  description   String
+  address       String
+  city          String
+  state         String
+  zip           String
+  phone         String
+  email         String
+  category      String
+  image         String?
+  latitude      Float?
+  longitude     Float?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reviews       Review[]
+  Product       Product[]
 }
 
 model User {
@@ -49,12 +49,12 @@ model User {
 
 model Product {
   id                 Int          @id @default(autoincrement())
-  productName        String
+  product_name       String
   productDescription String       @default("No description")
   productPrice       Float        @default(0)
   productImage       String?      @default("https://via.placeholder.com/150")
-  businessId         Int
-  business           Business     @relation(fields: [businessId], references: [id])
+  business_id        Int
+  business           Business     @relation(fields: [business_id], references: [id])
   rating             Int?         @default(0)
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt

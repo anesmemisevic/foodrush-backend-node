@@ -5,7 +5,7 @@ export const getCartByUserId = async (req, res) => {
   logger.info("getCartByUserId");
   const cart = await prisma.cart.findFirst({
     where: {
-      user_id: req.params.userId,
+      userId: Number(req.params.userId),
     },
   });
   return cart;
