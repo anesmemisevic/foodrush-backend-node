@@ -4,6 +4,7 @@ import usersRouter from "./apps/users/api/users.routes";
 import productsRouter from "./apps/products/api/products.routes";
 import businessesRouter from "./apps/businesses/api/businesses.routes";
 import ordersRouter from "./apps/orders/api/orders.routes";
+import cartRouter from "./apps/cart/api/cart.routes";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/businesses", businessesRouter);
 app.use("/api/orders", ordersRouter);
+app.use("/api/cart", cartRouter);
 
 // error handling middleware
 
