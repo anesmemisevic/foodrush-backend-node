@@ -47,7 +47,7 @@ export const createOneOrder = async (req, res) => {
               id: Number(req.body.userId),
             },
           },
-          order_detail: {
+          orderDetail: {
             connect: {
               id: orderDetail.id,
             },
@@ -98,8 +98,8 @@ export const editOneOrder = async (req, res) => {
         id: orderId,
       },
       data: {
-        user_id: Number(req.body.userId),
-        order_detail_id: Number(req.body.orderDetailId),
+        userId: Number(req.body.userId),
+        orderDetailId: Number(req.body.orderDetailId),
       },
     });
     return order;
