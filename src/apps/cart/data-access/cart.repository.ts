@@ -9,6 +9,9 @@ export const getCartByUserId = async (req, res) => {
     where: {
       userId: Number(req.params.userId),
     },
+    include: {
+      products: true,
+    },
   });
   return cart;
 };
@@ -85,6 +88,9 @@ export const addProductToCart = async (req, res) => {
           // total: productById.price * quantity,
           productsQuantities: [{ productId: productId, quantity: quantity }],
         },
+        include: {
+          products: true,
+        },
       });
       return newCart;
     }
@@ -96,18 +102,23 @@ export const addProductToCart = async (req, res) => {
   // cart exists
 
   // check if product exists in cart
-  const cartWithProducts = await prisma.cart.findFirst({
+  const cartWithAvailableProduct = await prisma.cart.findUnique({
     where: {
-      userId: Number(req.params.userId),
-      products: {
-        some: {
-          id: productId,
-        },
-      },
+      id: cart.id,
+    },
+    include: {
+      products: true,
     },
   });
 
-  if (cartWithProducts) {
+  const productAvailable = () => {
+    const index = cartWithAvailableProduct.products.findIndex(
+      (element) => element.id === productId
+    );
+    return index !== -1;
+  };
+
+  if (cartWithAvailableProduct && productAvailable()) {
     // product exists in cart
     // update quantity of product
     const newQuantity = quantityOfProduct - quantity;
@@ -123,21 +134,15 @@ export const addProductToCart = async (req, res) => {
     // update quantity of product in cart
 
     // get quantity of product in cart
-    const productInCartById = await prisma.cart.findFirst({
-      where: {
-        userId: Number(req.params.userId),
-      },
-    });
-
-    // update quantity of product in cart
     const newQuantityOfProductInCart =
-      productInCartById.productsQuantities as Prisma.JsonArray;
+      cartWithAvailableProduct.productsQuantities as Prisma.JsonArray;
 
     // get index of product in cart
     const index = newQuantityOfProductInCart.findIndex(
       (element: JsonObject) => element.productId === productId
     );
 
+    // update quantity of product in cart
     Object(newQuantityOfProductInCart[index].valueOf()).quantity += quantity;
 
     const newCart = await prisma.cart.update({
@@ -148,14 +153,19 @@ export const addProductToCart = async (req, res) => {
         // total: productById.price * quantity,
         productsQuantities: newQuantityOfProductInCart,
       },
+      include: {
+        products: true,
+      },
     });
 
     return newCart;
   }
 
   // product does not exist in cart
+
   // add product to cart
 
+  logger.info("gotten here");
   await prisma.cart.update({
     where: {
       id: cart.id,
@@ -181,12 +191,29 @@ export const addProductToCart = async (req, res) => {
     },
   });
 
-  const newCart = await prisma.cart.updateMany({
+  // const newQuantityOfProductInCart =
+  //   cartWithAvailableProduct.productsQuantities as Prisma.JsonArray;
+
+  // // get index of product in cart
+  // const index = newQuantityOfProductInCart.findIndex(
+  //   (element: JsonObject) => element.productId === productId
+  // );
+
+  // // update quantity of product in cart
+  // Object(newQuantityOfProductInCart[index].valueOf()).quantity += quantity;
+
+  const newCart = await prisma.cart.update({
     where: {
       id: cart.id,
     },
     data: {
-      productsQuantities: [{ productId: productId, quantity: quantity }],
+      // productsQuantities: [{ productId: productId, quantity: quantity }],
+      productsQuantities: {
+        push: { productId: productId, quantity: quantity },
+      },
+    },
+    include: {
+      products: true,
     },
   });
 
