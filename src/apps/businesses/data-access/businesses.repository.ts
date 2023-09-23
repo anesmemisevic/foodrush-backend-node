@@ -1,5 +1,6 @@
 import logger from "../../../libraries/logger";
 import prisma from "../../../libraries/db";
+import bcrypt from "bcrypt";
 
 export const getAllBusinesses = async (req, res) => {
   logger.info("getAllBusinesses() in businesses.repository.ts");
@@ -60,5 +61,27 @@ export const createOneBusiness = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Oops, server error from DB" });
+  }
+};
+
+export const register = async (
+  business_name: string,
+  email: string,
+  password: string
+) => {
+  try {
+    const business = await prisma.business.create({
+      data: {
+        business_name: business_name,
+        email: email,
+        password: await bcrypt.hash(password, 10),
+      },
+    });
+    return business;
+  } catch (err) {
+    if (err.code === "P2002") {
+      throw new Error("Email already exists");
+    }
+    throw new Error("Oops, server error");
   }
 };

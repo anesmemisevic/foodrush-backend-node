@@ -1,10 +1,12 @@
 import { Router } from "express";
+import { Request, Response } from "express";
 import logger from "../../../libraries/logger";
 import {
   getBusiness,
   getBusinesses,
   createBusiness,
 } from "../domain/businesses.service";
+import { loginBusiness, registerBusiness } from "../domain/businesses.auth";
 
 /**
  * This is the router for the businesses app.
@@ -20,5 +22,7 @@ businessesRouter.get("/:businessId", getBusiness, (req, res) => {
 });
 
 businessesRouter.post("/create", createBusiness);
+businessesRouter.post("/register", registerBusiness, (req, res) => {});
+businessesRouter.post("/login", loginBusiness, (req, res) => {});
 
 export default businessesRouter;

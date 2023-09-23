@@ -12,14 +12,13 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use((req, res, next) => {
-  let msg = `${req.method} ${req.url} ${res.statusCode} `;
+  let msg = `${req.method} ${req.url} ${JSON.stringify(req.body)} ::: ${JSON.stringify(req.params)} `;
   // msg += `${JSON.stringify(req.body)} ${JSON.stringify(req.params)} ${JSON.stringify(req.query)}`;
   logger.info(msg);
   next();
 });
 
 app.get("/", (req, res) => {
-  console.log("testing log");
   res.send("Hello World!");
 });
 
