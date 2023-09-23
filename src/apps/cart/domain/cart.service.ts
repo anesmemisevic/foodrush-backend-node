@@ -1,4 +1,8 @@
 import logger from "../../../libraries/logger";
+import { Cart, Prisma, Product } from "@prisma/client";
+import { JsonObject } from "@prisma/client/runtime/library";
+import { Request, Response } from "express";
+
 import {
   getCartByUserId,
   editProductInCart,
@@ -15,11 +19,7 @@ import {
   updateProductQuantity,
 } from "../../products/data-access/products.repository";
 
-import { Cart, Prisma, Product } from "@prisma/client";
-import { JsonObject } from "@prisma/client/runtime/library";
-import { Request, Response } from "express";
-
-export const getCart = async (req, res) => {
+export const getCart = async (req: Request, res: Response) => {
   logger.info("getCart");
   const cart = await getCartByUserId(Number(req.params.userId));
   res.status(200).json(cart);
@@ -50,7 +50,7 @@ export const addProduct = async (req: Request, res: Response) => {
       if (productById && quantityOfProduct >= quantity) {
         const newCart = await createCart(
           Number(req.params.userId),
-          productById
+          productById.id
         );
         const newQuantity = quantityOfProduct - quantity;
 
@@ -110,5 +110,7 @@ export const addProduct = async (req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 export const editProduct = async (req, res) => {};
+
 export const deleteProduct = async (req, res) => {};

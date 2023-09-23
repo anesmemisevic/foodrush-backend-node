@@ -1,6 +1,5 @@
 import logger from "../../../libraries/logger";
 import prisma from "../../../libraries/db";
-import { Product } from "@prisma/client";
 
 export const getCartByUserId = async (userId: number) => {
   logger.info("getCartByUserId");
@@ -35,13 +34,13 @@ export const updateProductQtyInCartById = async (
   return newCart;
 };
 
-export const createCart = async (userId: number, productById: Product) => {
+export const createCart = async (userId: number, productId: number) => {
   const newCart = await prisma.cart.create({
     data: {
       userId: userId,
       products: {
         connect: {
-          id: productById.id,
+          id: productId,
         },
       },
     },
@@ -119,5 +118,5 @@ export const appendProductToCart = async (
   });
 };
 
-export const editProductInCart = async (req, res) => {};
-export const deleteProductFromCart = async (req, res) => {};
+export const editProductInCart = async () => {};
+export const deleteProductFromCart = async () => {};
