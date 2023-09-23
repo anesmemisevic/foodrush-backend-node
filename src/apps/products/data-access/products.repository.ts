@@ -1,5 +1,6 @@
 import logger from "../../../libraries/logger";
 import prisma from "../../../libraries/db";
+import { Request, Response } from "express";
 
 export const getAllProducts = async (req, res) => {
   logger.info("getAllProducts() in products.service.ts");
@@ -11,17 +12,17 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
-export const getProductById = async (req, res) => {
-  console.log("req.params.productId: ", req.params.productId);
+export const getProductById = async (productId) => {
+  console.log("req.params.productId: ", productId);
   try {
     const product = await prisma.product.findUnique({
       where: {
-        id: Number(req.params.productId),
+        id: Number(productId),
       },
     });
     return product;
   } catch (err) {
-    res.status(500).json({ error: "Oops, server error" });
+    throw new Error(err.message);
   }
 };
 
@@ -53,7 +54,6 @@ export const editOneProduct = async (req, res, next) => {
     const productExists = await prisma.product.findUnique({
       where: {
         id: Number(req.params.productId),
-        business_id: Number(req.body.business_id),
       },
     });
 
@@ -74,6 +74,7 @@ export const editOneProduct = async (req, res, next) => {
       const product_price =
         req.body.product_price || productExists.productPrice;
       const business_id = req.body.business_id || productExists.business_id;
+      const quantity = req.body.quantity || productExists.quantity;
 
       const product = await prisma.product.update({
         where: {
@@ -84,6 +85,7 @@ export const editOneProduct = async (req, res, next) => {
           productDescription: product_description,
           productPrice: Number(product_price),
           business_id: Number(business_id),
+          quantity: Number(quantity),
         },
       });
       logger.debug(product);
@@ -132,5 +134,25 @@ export const deleteOneProduct = async (req, res, next) => {
   } catch (err) {
     logger.info(err);
     return res.status(500).json({ error: "Oops, server error" });
+  }
+};
+
+export const updateProductQuantity = async (
+  productId: number,
+  quantity: number
+) => {
+  try {
+    const product = await prisma.product.update({
+      where: {
+        id: Number(productId),
+      },
+      data: {
+        quantity: quantity,
+      },
+    });
+    return product;
+  } catch (err) {
+    logger.info(err);
+    throw new Error(err.message);
   }
 };
