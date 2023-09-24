@@ -72,17 +72,33 @@ export const loginUser = async (req: Request, res: Response) => {
 export const authenticatedUser = async (req: Request, res: Response) => {
   logger.info("authenticatedUser() in users.auth.ts");
   logger.info(req.cookies);
-  const jwt = req.cookies["jwt"];
+  try {
+    const jwt = req.cookies["jwt"];
 
-  const payload: any = verify(jwt, process.env.JWT_SECRET);
+    const payload: any = verify(jwt, process.env.JWT_SECRET);
 
-  if (!payload) {
-    return res.status(401).json({ error: "Unauthorized" });
+    if (!payload) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    // logger.info(payload.id);
+    // logger.info(payload.email);
+
+    try {
+      const user = await getUserById(payload.id);
+      res.status(200).json(user);
+    } catch (error) {
+      return res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: "Cannot authenticate user" });
   }
-  // logger.info(payload.id);
-  // logger.info(payload.email);
+};
 
-  const user = await getUserById(payload.id);
-
-  res.status(200).json(user);
+export const logoutUser = async (req: Request, res: Response) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: "Logout successful" });
 };

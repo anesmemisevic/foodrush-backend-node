@@ -4,6 +4,7 @@ import { getUsers, getUser } from "../domain/users.service";
 import {
   authenticatedUser,
   loginUser,
+  logoutUser,
   registerUser,
 } from "../domain/users.auth";
 /**
@@ -13,10 +14,10 @@ import {
 const usersRouter = Router();
 
 usersRouter.get("/", getUsers, (req, res) => {});
-usersRouter.get("/current", authenticatedUser, (req, res) => {});
+usersRouter.get("/current-auth-user", authenticatedUser, (req, res) => {});
 usersRouter.post("/register", registerUser, (req, res) => {});
 usersRouter.post("/login", loginUser, (req, res) => {});
-
+usersRouter.post("/logout", logoutUser, (req, res) => {});
 
 usersRouter.get("/:userId", getUser, (req, res) => {});
 
