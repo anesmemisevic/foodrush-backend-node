@@ -5,14 +5,18 @@ import productsRouter from "./apps/products/api/products.routes";
 import businessesRouter from "./apps/businesses/api/businesses.routes";
 import ordersRouter from "./apps/orders/api/orders.routes";
 import cartRouter from "./apps/cart/api/cart.routes";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(cookieParser());
 
 app.use((req, res, next) => {
-  let msg = `${req.method} ${req.url} ${JSON.stringify(req.body)} ::: ${JSON.stringify(req.params)} `;
+  let msg = `${req.method} ${req.url} ${JSON.stringify(
+    req.body
+  )} ::: ${JSON.stringify(req.params)} `;
   // msg += `${JSON.stringify(req.body)} ${JSON.stringify(req.params)} ${JSON.stringify(req.query)}`;
   logger.info(msg);
   next();
