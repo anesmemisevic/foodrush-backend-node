@@ -1,4 +1,4 @@
-import { logger } from "neovim/lib/utils/logger";
+import logger from "../../../libraries/logger";
 
 import {
   getOneOrder,
