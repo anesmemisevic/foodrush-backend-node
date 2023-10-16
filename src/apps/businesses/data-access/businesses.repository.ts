@@ -8,17 +8,18 @@ export const getAllBusinesses = async (req, res) => {
   return businesses;
 };
 
-export const getBusinessById = async (req, res) => {
-  console.log("req.params.businessId: ", req.params.businessId);
+export const getBusinessById = async (businessId: number) => {
+  console.log("req.params.businessId: ", businessId);
   try {
     const business = await prisma.business.findUnique({
       where: {
-        id: Number(req.params.businessId),
+        id: Number(businessId),
       },
     });
     return business;
-  } catch (err) {
-    res.status(500).json({ error: "Oops, server error" });
+  } catch (error) {
+    logger.info(error);
+    throw new Error("Oops, server error");
   }
 };
 

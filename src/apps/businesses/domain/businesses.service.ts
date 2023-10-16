@@ -13,7 +13,16 @@ export const getBusinesses = async (req, res) => {
 
 export const getBusiness = async (req, res) => {
   logger.info("getBusiness() in businesses.service.ts");
-  const businessById = await getBusinessById(req, res);
+  const businessId: number = Number(req.params.businessId);
+
+  logger.warn(businessId);
+  logger.warn(typeof businessId);
+
+  if (isNaN(businessId)) {
+    return res.status(400).json({ error: "Invalid business ID" });
+  }
+
+  const businessById = await getBusinessById(businessId);
   if (!businessById) {
     return res.status(400).json({ error: "Business not found" });
   }

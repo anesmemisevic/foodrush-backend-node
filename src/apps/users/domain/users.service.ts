@@ -16,6 +16,12 @@ export const getUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
   logger.info("getUser() in users.service.ts");
+
+  const userId = Number(req.params.userId);
+  if (isNaN(userId)) {
+    return res.status(400).json({ error: "Invalid business ID" });
+  }
+
   const userById = await getUserById(req.params.userId);
   if (!userById) {
     return res.status(400).json({ error: "User not found" });
